@@ -57,19 +57,35 @@ const QuestionScreen = () => {
     let justValues = Object.values(result);
     justValues.shift();
 
-    return justValues;
+    return result;
   };
 
   const selectBestAskings = (data) => {
+
     const values = countTrueFalse(data);
 
-    for (let i in questions) {
-      questions[i][0] = values[i];
+
+
+    let orderedQuestions = [];
+
+    for (let i of questions) {
+      let diff = values[i[1]];
+
+      let question = []
+      question.push(diff, i[1], i[2]);
+
+      orderedQuestions.push(question);
+
     }
 
-    questions.sort(function(a, b) {
+    orderedQuestions.sort(function (a, b) {
       return a[0] - b[0];
     });
+
+    console.log(orderedQuestions);
+
+    questions = orderedQuestions;
+
   }
 
   const handleAnswer = (answer) => {
@@ -82,15 +98,15 @@ const QuestionScreen = () => {
   function takeChance(answer, property) {
 
     let ans = answer === "y" ? 'true' : 'false';
-    
+
     let updatedDataBase = database.filter((element) => element[property] === ans);
-    
+
     if (updatedDataBase.length !== 0 && (answer === "y" || answer === 'n'))
       setDatabase(updatedDataBase);
 
     if (updatedDataBase.length === 1) {
       console.log(updatedDataBase)
-      navigate('/who', { state: updatedDataBase[0].name});
+      navigate('/who', { state: updatedDataBase[0].name });
     }
   }
 
