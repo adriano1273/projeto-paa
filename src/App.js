@@ -7,13 +7,13 @@ import WhoScreen from './pages/WhoScreen';
 function App() {
   return (
     <>
-      <Menu/>
+      <Menu />
       <Router>
         <Routes>
-          <Route exact path="/" element={<Home/>}/>
-          <Route exact path="/question" element={<QuestionScreen/>}/>
-          <Route exact path="/who" element={<WhoScreen/>}/>
-          <Route path="*" element={<Home/>}/>
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="/question" element={<QuestionScreen />} />
+          <Route exact path="/who" element={<WhoScreen />} />
+          <Route path="*" element={<Home />} />
         </Routes>
       </Router>
     </>

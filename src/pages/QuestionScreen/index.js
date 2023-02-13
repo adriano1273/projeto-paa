@@ -1,53 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '../../components/Button'
-import csv from 'd3'
-import './styles.css'
+import { csv } from 'd3';
+import datacsv from './data.csv';
+import './styles.css';
 
 
 const QuestionScreen = () => {
 
-  const [database, setDatabase] = useState([
-    { "name": "Snake", "has_fur": false, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": true, "lives_in_groups": false, "lives_in_water": false, "is_herbivore": false, "has_tusks": true, "is_domesticated": false },
-    { "name": "Aligator", "has_fur": false, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": false, "has_tusks": true, "is_domesticated": false },
-    { "name": "Turtle", "has_fur": false, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": true, "is_herbivore": true, "has_tusks": false, "is_domesticated": true },
-    { "name": "Iguana", "has_fur": false, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": false, "lives_in_water": false, "is_herbivore": true, "has_tusks": false, "is_domesticated": true },
-    { "name": "Gorilla", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": false, "has_tusks": false, "is_domesticated": false },
-    { "name": "Shark", "has_fur": false, "has_fins": true, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": false, "lives_in_water": true, "is_herbivore": false, "has_tusks": false, "is_domesticated": false },
-    { "name": "Tortoise", "has_fur": false, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": true, "has_tusks": false, "is_domesticated": true },
-    { "name": "Buffalo", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": true, "has_tusks": false, "is_domesticated": true },
-    { "name": "Pigeon", "has_fur": true, "has_fins": false, "is_flightless": false, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": true, "has_tusks": false, "is_domesticated": true },
-    { "name": "Bat", "has_fur": true, "has_fins": false, "is_flightless": false, "is_nocturnal": true, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": true, "has_tusks": false, "is_domesticated": false },
-    { "name": "giraffe", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": true, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": true, "has_tusks": false, "is_domesticated": false },
-    { "name": "tiger", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": true, "is_venomous": false, "lives_in_groups": false, "lives_in_water": false, "is_herbivore": false, "has_tusks": true, "is_domesticated": false },
-    { "name": "Whale", "has_fur": false, "has_fins": true, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": true, "is_herbivore": false, "has_tusks": false, "is_domesticated": false },
-    { "name": "Lion", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": false, "has_tusks": true, "is_domesticated": false },
-    { "name": "black Widow", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": true, "lives_in_groups": false, "lives_in_water": false, "is_herbivore": false, "has_tusks": true, "is_domesticated": false },
-    { "name": "pharaoh ant", "has_fur": false, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": true, "has_tusks": true, "is_domesticated": false },
-    { "name": "moth", "has_fur": false, "has_fins": false, "is_flightless": false, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": false, "lives_in_water": false, "is_herbivore": false, "has_tusks": true, "is_domesticated": false },
-    { "name": "bee", "has_fur": true, "has_fins": false, "is_flightless": false, "is_nocturnal": false, "has_stripes": true, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": true, "has_tusks": true, "is_domesticated": true },
-    { "name": "lobster", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": false, "lives_in_water": true, "is_herbivore": false, "has_tusks": true, "is_domesticated": false },
-    { "name": "hooker", "has_fur": false, "has_fins": true, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": true, "is_herbivore": false, "has_tusks": true, "is_domesticated": false },
-    { "name": "Elephant", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": true, "has_tusks": true, "is_domesticated": false },
-    { "name": "Snail", "has_fur": false, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": false, "lives_in_water": false, "is_herbivore": true, "has_tusks": false, "is_domesticated": false },
-    { "name": "Panda", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": false, "lives_in_water": false, "is_herbivore": true, "has_tusks": false, "is_domesticated": false },
-    { "name": "Butterfly", "has_fur": false, "has_fins": false, "is_flightless": false, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": false, "lives_in_water": false, "is_herbivore": true, "has_tusks": false, "is_domesticated": false },
-    { "name": "Hippopotamus", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": true, "is_herbivore": true, "has_tusks": true, "is_domesticated": false },
-    { "name": "Kangaroo", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": true, "has_tusks": false, "is_domesticated": false },
-    { "name": "Octopus", "has_fur": false, "has_fins": false, "is_flightless": true, "is_nocturnal": true, "has_stripes": false, "is_venomous": true, "lives_in_groups": false, "lives_in_water": true, "is_herbivore": false, "has_tusks": false, "is_domesticated": false },
-    { "name": "Crocodile", "has_fur": false, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": false, "lives_in_water": true, "is_herbivore": false, "has_tusks": true, "is_domesticated": false },
-    { "name": "Leopard", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": true, "is_venomous": false, "lives_in_groups": false, "lives_in_water": false, "is_herbivore": false, "has_tusks": false, "is_domesticated": false },
-    { "name": "Monkey", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": false, "has_tusks": false, "is_domesticated": false },
-    { "name": "Polar Bear", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": false, "lives_in_water": false, "is_herbivore": false, "has_tusks": false, "is_domesticated": false },
-    { "name": "Jaguar", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": true, "has_stripes": true, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": false, "has_tusks": true, "is_domesticated": false },
-    { "name": "Hare", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": true, "is_venomous": false, "lives_in_groups": false, "lives_in_water": false, "is_herbivore": true, "has_tusks": false, "is_domesticated": false },
-    { "name": "Fennec", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": true, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": false, "is_herbivore": false, "has_tusks": false, "is_domesticated": false },
-    { "name": "Orca", "has_fur": false, "has_fins": true, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": false, "lives_in_water": true, "is_herbivore": false, "has_tusks": true, "is_domesticated": false },
-    { "name": "Crab", "has_fur": false, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": false, "lives_in_water": true, "is_herbivore": false, "has_tusks": false, "is_domesticated": false },
-    { "name": "Platypus", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": true, "has_stripes": true, "is_venomous": false, "lives_in_groups": false, "lives_in_water": true, "is_herbivore": false, "has_tusks": false, "is_domesticated": false },
-    { "name": "Duck", "has_fur": false, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": false, "is_venomous": false, "lives_in_groups": true, "lives_in_water": true, "is_herbivore": false, "has_tusks": false, "is_domesticated": false },
-    { "name": "Donkey", "has_fur": true, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": true, "is_venomous": false, "lives_in_groups": false, "lives_in_water": false, "is_herbivore": true, "has_tusks": false, "is_domesticated": true },
-    { "name": "Paul", "has_fur": false, "has_fins": false, "is_flightless": true, "is_nocturnal": false, "has_stripes": true, "is_venomous": false, "lives_in_groups": false, "lives_in_water": false, "is_herbivore": false, "has_tusks": false, "is_domesticated": true },
-  ]);
+  const [database, setDatabase] = useState([]);
+  useEffect(() => {
+    csv(datacsv).then(data => {
+      setDatabase(data);
+    })
+  }, []);
 
   let questions = [
     ["has_fur", "Esse animal possui pelos?"],
@@ -74,12 +39,13 @@ const QuestionScreen = () => {
 
   function takeChance(answer, property) {
 
-    let ans = answer === "y" ? true : false;
+    let ans = answer === "y" ? 'true' : 'false';
 
     console.log(property)
 
     let updatedDataBase = database.filter((element) => element[property] === ans);
 
+    console.log("updatedDataBase");
     console.log(updatedDataBase);
 
     setDatabase(updatedDataBase);
