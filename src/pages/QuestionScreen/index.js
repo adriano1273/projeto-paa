@@ -4,44 +4,63 @@ import { csv } from 'd3';
 import datacsv from './data.csv';
 import './styles.css';
 
+let questions = [
+  [0, "has_fur", "Esse animal possui pelos?"],
+  [0, "has_fins", "Esse animal possui barbatanas?"],
+  [0, "is_flightless", "Esse animal é incapaz de voar?"],
+  [0, "is_nocturnal", "É noturno?"],
+  [0, "has_stripes", "Possui listras?"],
+  [0, "is_venomous", "É venenoso?"],
+  [0, "lives_in_groups", "Esse animal vive em grupos?"],
+  [0, "lives_in_water", "Esse animal é aquático?"],
+  [0, "is_herbivore", "Esse animal é herbívoro?"],
+  [0, "has_tusks", "Possui presas?"],
+  [0, "is_domesticated", "É domesticado?"],
+];
+
 
 const QuestionScreen = () => {
 
   const [database, setDatabase] = useState([]);
+
+  const [currentQuestion, setCurrentQuestion] = useState(questions[0][2]);
+  const [index, setIndex] = useState(0);
+
   useEffect(() => {
     csv(datacsv).then(data => {
       setDatabase(data);
     })
   }, []);
 
-  let questions = [
-    ["has_fur", "Esse animal possui pelos?"],
-    ["has_fins", "Esse animal possui barbatanas?"],
-    ["is_flightless", "Esse animal é incapaz de voar?"],
-    ["is_nocturnal", "É noturno?"],
-    ["has_stripes", "Possui listras?"],
-    ["is_venomous", "É venenoso?"],
-    ["lives_in_groups", "Esse animal vive em grupos?"],
-    ["lives_in_water", "Esse animal é aquático?"],
-    ["is_herbivore", "Esse animal é herbívoro?"],
-    ["has_tusks", "Possui presas?"],
-    ["is_domesticated", "É domesticado?"],
-  ];
-
-  const [currentQuestion, setCurrentQuestion] = useState(questions[0][1]);
-  const [index, setIndex] = useState(0);
+  const countTrueFalse = data => {
+    const result = {};
+    for (const key in data[0]) {
+      if (data[0].hasOwnProperty(key)) {
+        let trueCount = 0;
+        let falseCount = 0;
+        for (const item of data) {
+          if (item[key] === 'true') {
+            trueCount++;
+          } else {
+            falseCount++;
+          }
+        }
+        result[key] = trueCount - falseCount;
+      }
+    }
+    return result;
+  };
 
   const handleAnswer = (answer) => {
-    takeChance(answer, questions[index][0]);
-    setCurrentQuestion(questions[index + 1][1]);
+    takeChance(answer, questions[index][1]);
+    setCurrentQuestion(questions[index + 1][2]);
     setIndex(index + 1)
+    console.log(countTrueFalse(database));
   }
 
   function takeChance(answer, property) {
 
     let ans = answer === "y" ? 'true' : 'false';
-
-    console.log(property)
 
     let updatedDataBase = database.filter((element) => element[property] === ans);
 
