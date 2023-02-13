@@ -1,0 +1,21 @@
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.container .central_block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: -4rem;
+}
+
+.container .central_block h2{
+    font-family: 'Griffy', cursive;
+    color: #2E2B2B;
+    font-weight: normal;
+    font-size: 96px;
+}

@@ -1,0 +1,47 @@
+.menu {
+    position: absolute;
+    z-index: 1;
+    height: 100%;
+}
+
+.menu .icon {
+    position: absolute;
+    cursor: pointer;
+    left: 3rem;
+    top: 3rem;
+}
+
+.menu .sidebar {
+    position: absolute;
+    height: inherit;
+    width: 16rem;
+    background-color: #E8E8E8;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu .sidebar ul{
+    width: 100%;
+    margin-top: -3rem;
+}
+
+.menu .sidebar ul a{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    color: #2E2B2B;
+    text-decoration: none;
+    font-size: 28px;
+    padding: 1.5rem 1rem;
+}
+
+.menu .sidebar ul a:hover{
+    background-color: #F2F2F2;
+}
+
+.menu .sidebar .voltar{
+    cursor: pointer;
+}
+
