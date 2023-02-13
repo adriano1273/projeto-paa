@@ -3,6 +3,7 @@ import Button from '../../components/Button'
 import { csv } from 'd3';
 import datacsv from './data.csv';
 import './styles.css';
+import { useNavigate } from 'react-router-dom';
 
 let questions = [
   [0, "has_fur", "Esse animal possui pelos?"],
@@ -15,22 +16,26 @@ let questions = [
   [0, "lives_in_water", "Esse animal é aquático?"],
   [0, "is_herbivore", "Esse animal é herbívoro?"],
   [0, "has_tusks", "Possui presas?"],
-  [0, "is_domesticated", "É domesticado?"],
+  [0, "is_domesticated", "O animal é domesticado?"],
 ];
 
 
 const QuestionScreen = () => {
 
-  const [database, setDatabase] = useState([]);
+  let navigate = useNavigate();
 
-  const [currentQuestion, setCurrentQuestion] = useState(questions[0][2]);
-  const [index, setIndex] = useState(0);
+  const [database, setDatabase] = useState([]);
 
   useEffect(() => {
     csv(datacsv).then(data => {
       setDatabase(data);
+      selectBestAskings(data);
+      setCurrentQuestion(questions[0][2])
     })
   }, []);
+
+  const [currentQuestion, setCurrentQuestion] = useState("");
+  const [index, setIndex] = useState(0);
 
   const countTrueFalse = data => {
     const result = {};
@@ -45,32 +50,47 @@ const QuestionScreen = () => {
             falseCount++;
           }
         }
-        result[key] = trueCount - falseCount;
+        result[key] = Math.abs(trueCount - falseCount);
       }
     }
-    return result;
+
+    let justValues = Object.values(result);
+    justValues.shift();
+
+    return justValues;
   };
+
+  const selectBestAskings = (data) => {
+    const values = countTrueFalse(data);
+
+    for (let i in questions) {
+      questions[i][0] = values[i];
+    }
+
+    questions.sort(function(a, b) {
+      return a[0] - b[0];
+    });
+  }
 
   const handleAnswer = (answer) => {
     takeChance(answer, questions[index][1]);
     setCurrentQuestion(questions[index + 1][2]);
     setIndex(index + 1)
-    console.log(countTrueFalse(database));
+    countTrueFalse(database)
   }
 
   function takeChance(answer, property) {
 
     let ans = answer === "y" ? 'true' : 'false';
-
+    
     let updatedDataBase = database.filter((element) => element[property] === ans);
-
-    console.log("updatedDataBase");
-    console.log(updatedDataBase);
-
-    setDatabase(updatedDataBase);
+    
+    if (updatedDataBase.length !== 0 && (answer === "y" || answer === 'n'))
+      setDatabase(updatedDataBase);
 
     if (updatedDataBase.length === 1) {
-      alert(`Your character is ${updatedDataBase[0].name}.`);
+      console.log(updatedDataBase)
+      navigate('/who', { state: updatedDataBase[0].name});
     }
   }
 
